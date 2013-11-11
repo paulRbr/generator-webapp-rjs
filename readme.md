@@ -1,4 +1,4 @@
-# Web app generator [![Build Status](https://secure.travis-ci.org/popox/generator-webapp-rjs.png?branch=master)](http://travis-ci.org/yeoman/generator-webapp)
+# Web app generator [![Build Status](https://secure.travis-ci.org/popox/generator-webapp-rjs.png?branch=master)](http://travis-ci.org/popox/generator-webapp)
 
 Yeoman generator that scaffolds out a front-end web app.
 
@@ -8,19 +8,19 @@ Yeoman generator that scaffolds out a front-end web app.
 * Built-in preview server with LiveReload
 * Automagically compile CoffeeScript & Compass
 * Automagically lint your scripts
-* Automagically wire up your Bower components. Supported both [with](https://github.com/yeoman/grunt-bower-requirejs) and [without](https://github.com/stephenplusplus/grunt-bower-install) (new) RequireJS.
+* Automagically wire up your Bower components inside your RequireJS config.
+* Automagically trace dependencies with RequireJS.
 * Awesome Image Optimization (via OptiPNG, pngquant, jpegtran and gifsicle)
 * Mocha Unit Testing with PhantomJS
-* Optional - RequireJS
 * Optional - Twitter Bootstrap for SASS
 * Optional - Leaner Modernizr builds (new)
 
-For more information on what `generator-webapp` can do for you, take a look at the [Grunt tasks](https://github.com/yeoman/generator-webapp/blob/master/app/templates/_package.json) used in our `package.json`.
+For more information on what `generator-webapp-rjs` can do for you, take a look at the [Grunt tasks](https://github.com/geniusweb/generator-webapp-rjs/blob/master/app/templates/_package.json) used in our `package.json`.
 
 ## Getting Started
 
-- Install: `npm install -g generator-webapp`
-- Run: `yo webapp`
+- Install: `npm install -g generator-webapp-rjs`
+- Run: `yo webapp-rjs`
 - Run `grunt` for building and `grunt server` for preview
 
 
