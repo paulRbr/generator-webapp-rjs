@@ -12,7 +12,7 @@ describe('Webapp generator test', function () {
         return done(err);
       }
 
-      this.webapp = helpers.createGenerator('webapp:app', [
+      this.webapp = helpers.createGenerator('webapp-rjs:app', [
         '../../app', [
           helpers.createDummyGenerator(),
           'mocha:app'
@@ -36,13 +36,13 @@ describe('Webapp generator test', function () {
       'app/favicon.ico',
       'app/robots.txt',
       'app/index.html',
-      'app/scripts/hello.coffee',
+      'app/scripts/app.coffee',
       'app/scripts/main.js',
       'app/styles/main.scss'
     ];
 
     helpers.mockPrompt(this.webapp, {
-      features: ['compassBootstrap', 'includeRequireJS']
+      features: ['compassBootstrap']
     });
 
     this.webapp.coffee = true;
@@ -62,12 +62,13 @@ describe('Webapp generator test', function () {
       'app/favicon.ico',
       'app/robots.txt',
       'app/index.html',
+      'app/scripts/app.js',
       ['app/scripts/main.js', /require\.config/],
       'app/styles/main.scss'
     ];
 
     helpers.mockPrompt(this.webapp, {
-      features: ['compassBootstrap', 'includeRequireJS']
+      features: ['compassBootstrap']
     });
 
     this.webapp.options['skip-install'] = true;

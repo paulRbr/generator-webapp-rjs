@@ -6,7 +6,7 @@ Options:
     RequireJS: Add support for AMD-loading via RequireJS
 
 Example:
-    yo webapp [--coffee]
+    yo webapp-rjs [--coffee]
 
     This will create:
         Gruntfile.js: Configuration for the task runner.

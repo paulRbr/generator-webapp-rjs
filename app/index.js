@@ -52,10 +52,6 @@ AppGenerator.prototype.askFor = function askFor() {
       value: 'compassBootstrap',
       checked: true
     }, {
-      name: 'RequireJS',
-      value: 'includeRequireJS',
-      checked: true
-    }, {
       name: 'Modernizr',
       value: 'includeModernizr',
       checked: true
@@ -70,7 +66,6 @@ AppGenerator.prototype.askFor = function askFor() {
     // manually deal with the response, get back and store the results.
     // we change a bit this way of doing to automatically do this in the self.prompt() method.
     this.compassBootstrap = hasFeature('compassBootstrap');
-    this.includeRequireJS = hasFeature('includeRequireJS');
     this.includeModernizr = hasFeature('includeModernizr');
 
     cb();
@@ -122,60 +117,21 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
 
   this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
   this.indexFile = this.engine(this.indexFile, this);
-
-  if (!this.includeRequireJS) {
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', [
-      'scripts/main.js'
-    ]);
-
-    if (this.coffee) {
-      this.indexFile = this.appendFiles({
-        html: this.indexFile,
-        fileType: 'js',
-        optimizedPath: 'scripts/coffee.js',
-        sourceFileList: ['scripts/hello.js'],
-        searchPath: '.tmp'
-      });
-    }
-  }
-
-  if (this.compassBootstrap && !this.includeRequireJS) {
-    // wire Twitter Bootstrap plugins
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-      'bower_components/sass-bootstrap/js/affix.js',
-      'bower_components/sass-bootstrap/js/alert.js',
-      'bower_components/sass-bootstrap/js/dropdown.js',
-      'bower_components/sass-bootstrap/js/tooltip.js',
-      'bower_components/sass-bootstrap/js/modal.js',
-      'bower_components/sass-bootstrap/js/transition.js',
-      'bower_components/sass-bootstrap/js/button.js',
-      'bower_components/sass-bootstrap/js/popover.js',
-      'bower_components/sass-bootstrap/js/carousel.js',
-      'bower_components/sass-bootstrap/js/scrollspy.js',
-      'bower_components/sass-bootstrap/js/collapse.js',
-      'bower_components/sass-bootstrap/js/tab.js'
-    ]);
-  }
 };
 
 // TODO(mklabs): to be put in a subgenerator like rjs:app
 AppGenerator.prototype.requirejs = function requirejs() {
-  if (!this.includeRequireJS) {
-    return;
-  }
 
   this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', ['bower_components/requirejs/require.js'], {
     'data-main': 'scripts/main'
   });
 
   // add a basic amd module
-  this.write('app/scripts/app.js', [
-    '/*global define */',
-    'define([], function () {',
-    '    \'use strict\';\n',
-    '    return \'\\\'Allo \\\'Allo!\';',
-    '});'
-  ].join('\n'));
+  if (this.coffee) {
+    this.copy('app.coffee', 'app/scripts/app.coffee');
+  } else {
+    this.copy('app.js', 'app/scripts/app.js');
+  }
 
   this.template('require_main.js', 'app/scripts/main.js');
 };
@@ -186,12 +142,4 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/styles');
   this.mkdir('app/images');
   this.write('app/index.html', this.indexFile);
-
-  if (this.coffee) {
-    this.write('app/scripts/hello.coffee', this.mainCoffeeFile);
-  }
-
-  if (!this.includeRequireJS) {
-    this.write('app/scripts/main.js', 'console.log(\'\\\'Allo \\\'Allo!\');');
-  }
 };

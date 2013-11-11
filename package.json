@@ -1,6 +1,6 @@
 {
-  "name": "generator-webapp",
-  "version": "0.4.3",
+  "name": "generator-webapp-rjs",
+  "version": "0.4.4",
   "description": "Scaffold out a front-end web app",
   "keywords": [
     "yeoman-generator",
@@ -10,13 +10,13 @@
     "h5bp",
     "modernizr"
   ],
-  "homepage": "https://github.com/yeoman/generator-webapp",
-  "bugs": "https://github.com/yeoman/generator-webapp/issues",
+  "homepage": "https://github.com/geniusweb/generator-webapp",
+  "bugs": "https://github.com/geniusweb/generator-webapp/issues",
   "author": "Chrome Developer Relations",
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/yeoman/generator-webapp.git"
+    "url": "git://github.com/geniusweb/generator-webapp-rjs.git"
   },
   "scripts": {
     "test": "mocha --reporter spec"

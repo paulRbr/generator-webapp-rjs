@@ -182,7 +182,7 @@ module.exports = function (grunt) {
         // but still available if needed
         /*concat: {
             dist: {}
-        },*/<% if (includeRequireJS) { %>
+        },*/
         requirejs: {
             dist: {
                 // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
@@ -201,19 +201,7 @@ module.exports = function (grunt) {
                     //uglify2: {} // https://github.com/mishoo/UglifyJS2
                 }
             }
-        },<% } else { %>
-        'bower-install': {
-            app: {
-                html: '<%%= yeoman.app %>/index.html',
-                ignorePath: '<%%= yeoman.app %>/'
-            }
         },
-        // not enabled since usemin task does concat and uglify
-        // check index.html to edit your build targets
-        // enable this task if you prefer defining your build targets here
-        /*uglify: {
-            dist: {}
-        },*/<% } %>
         rev: {
             dist: {
                 files: {
@@ -312,7 +300,18 @@ module.exports = function (grunt) {
                         'bower_components/sass-bootstrap/fonts/*.*'<% } %>
                     ]
                 }]
-            },
+            },<% if (coffee) { %>
+            bodge: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '.tmp',
+                    src: [
+                        '**/*.js'
+                    ]
+                }]
+            }, <% } %>
             styles: {
                 expand: true,
                 dot: true,
@@ -349,15 +348,15 @@ module.exports = function (grunt) {
                 'svgmin',
                 'htmlmin'
             ]
-        }<% if (includeRequireJS) { %>,
+        },
         bower: {
             options: {
                 exclude: ['modernizr']
             },
-            all: {
+            target: {
                 rjsConfig: '<%%= yeoman.app %>/scripts/main.js'
             }
-        }<% } %>
+        }
     });
 
     grunt.registerTask('server', function (target) {
@@ -384,11 +383,12 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('build', [
-        'clean:dist',
+        'clean:dist',<% if (coffee) { %>
+        'copy:bodge',<% } %>
         'useminPrepare',
         'concurrent:dist',
-        'autoprefixer',<% if (includeRequireJS) { %>
-        'requirejs',<% } %>
+        'autoprefixer',
+        'requirejs',
         'concat',
         'cssmin',
         'uglify',<% if (includeModernizr) { %>
@@ -400,6 +400,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'jshint',
+        'bower',
         'test',
         'build'
     ]);
