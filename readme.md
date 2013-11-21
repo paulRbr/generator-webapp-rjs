@@ -1,4 +1,4 @@
-# Web app generator [![Build Status](https://travis-ci.org/geniusweb/generator-webapp-rjs.png?branch=master)](https://travis-ci.org/geniusweb/generator-webapp-rjs)
+# Web app generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-webapp.png?branch=master)](http://travis-ci.org/yeoman/generator-webapp)
 
 Yeoman generator that scaffolds out a front-end web app.
 
@@ -8,20 +8,20 @@ Yeoman generator that scaffolds out a front-end web app.
 * Built-in preview server with LiveReload
 * Automagically compile CoffeeScript & Compass
 * Automagically lint your scripts
-* Automagically wire up your Bower components inside your RequireJS config.
+* Automagically wire up your Bower components inside your RequireJS config [with](https://github.com/yeoman/grunt-bower-requirejs).
 * Automagically trace dependencies with RequireJS.
 * Awesome Image Optimization (via OptiPNG, pngquant, jpegtran and gifsicle)
 * Mocha Unit Testing with PhantomJS
 * Optional - Twitter Bootstrap for SASS
 * Optional - Leaner Modernizr builds (new)
 
-For more information on what `generator-webapp-rjs` can do for you, take a look at the [Grunt tasks](https://github.com/geniusweb/generator-webapp-rjs/blob/master/app/templates/_package.json) used in our `package.json`.
+For more information on what `generator-webapp-rjs` can do for you, take a look at the [Grunt tasks](https://github.com/popox/generator-webapp-rjs/blob/master/app/templates/_package.json) used in our `package.json`.
 
 ## Getting Started
 
 - Install: `npm install -g generator-webapp-rjs`
 - Run: `yo webapp-rjs`
-- Run `grunt` for building and `grunt server` for preview
+- Run `grunt` for building and `grunt serve` for preview
 
 
 ## Options
@@ -30,7 +30,7 @@ For more information on what `generator-webapp-rjs` can do for you, take a look 
 
   Skips the automatic execution of `bower` and `npm` after scaffolding has finished.
 
-* `--test-framework <framework>`
+* `--test-framework=<framework>`
 
   Defaults to `mocha`. Can be switched for another supported testing framework like `jasmine`.
 

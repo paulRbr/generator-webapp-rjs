@@ -27,11 +27,11 @@ describe('Webapp generator test', function () {
     this.app = require('../app');
   });
 
-  it('creates expected files in non-AMD mode', function (done) {
+  it('creates expected files', function (done) {
     var expected = [
       ['bower.json', /"name": "temp"/],
       ['package.json', /"name": "temp"/],
-      'Gruntfile.js',
+      ['Gruntfile.js', /coffee:/],
       'app/404.html',
       'app/favicon.ico',
       'app/robots.txt',
@@ -46,6 +46,31 @@ describe('Webapp generator test', function () {
     });
 
     this.webapp.coffee = true;
+    this.webapp.options['skip-install'] = true;
+    this.webapp.run({}, function () {
+      helpers.assertFiles(expected);
+      done();
+    });
+  });
+
+  it('creates expected files in non-AMD non-coffee mode', function (done) {
+    var expected = [
+      ['bower.json', /"name": "temp"/],
+      ['package.json', /"name": "temp"/],
+      'Gruntfile.js',
+      'app/404.html',
+      'app/favicon.ico',
+      'app/robots.txt',
+      'app/index.html',
+      'app/scripts/main.js',
+      'app/styles/main.scss'
+    ];
+
+    helpers.mockPrompt(this.webapp, {
+      features: ['compassBootstrap']
+    });
+
+    this.webapp.coffee = false;
     this.webapp.options['skip-install'] = true;
     this.webapp.run({}, function () {
       helpers.assertFiles(expected);
