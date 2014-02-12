@@ -3,6 +3,7 @@ var util = require('util');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var yeoman = require('yeoman-generator');
+var chalk = require('chalk');
 
 
 var AppGenerator = module.exports = function Appgenerator(args, options, config) {
@@ -16,16 +17,17 @@ var AppGenerator = module.exports = function Appgenerator(args, options, config)
   options['test-framework'] = this.testFramework;
 
   // resolved to mocha by default (could be switched to jasmine for instance)
-  this.hookFor('test-framework', { as: 'app' });
-
-  this.mainCoffeeFile = 'console.log "\'Allo from CoffeeScript!"';
-
-  this.on('end', function () {
-    this.installDependencies({
-      skipInstall: options['skip-install'],
-      skipMessage: options['skip-install-message']
-    });
+  this.hookFor('test-framework', {
+    as: 'app',
+    options: {
+      options: {
+        'skip-install': options['skip-install-message'],
+        'skip-message': options['skip-install']
+      }
+    }
   });
+
+  this.options = options;
 
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
 };
@@ -38,7 +40,7 @@ AppGenerator.prototype.askFor = function askFor() {
   // welcome message
   if (!this.options['skip-welcome-message']) {
     console.log(this.yeoman);
-    console.log('Out of the box I include HTML5 Boilerplate and jQuery.');
+    console.log(chalk.magenta('Out of the box I include HTML5 Boilerplate, jQuery, and a Gruntfile.js to build your app.'));
   }
 
   var prompts = [{
@@ -46,8 +48,12 @@ AppGenerator.prototype.askFor = function askFor() {
     name: 'features',
     message: 'What more would you like?',
     choices: [{
-      name: 'Bootstrap for Sass',
-      value: 'compassBootstrap',
+      name: 'Sass with Compass',
+      value: 'includeCompass',
+      checked: true
+    }, {
+      name: 'Bootstrap',
+      value: 'includeBootstrap',
       checked: true
     }, {
       name: 'Modernizr',
@@ -63,7 +69,8 @@ AppGenerator.prototype.askFor = function askFor() {
 
     // manually deal with the response, get back and store the results.
     // we change a bit this way of doing to automatically do this in the self.prompt() method.
-    this.compassBootstrap = hasFeature('compassBootstrap');
+    this.includeCompass = hasFeature('includeCompass');
+    this.includeBootstrap = hasFeature('includeBootstrap');
     this.includeModernizr = hasFeature('includeModernizr');
 
     cb();
@@ -104,11 +111,8 @@ AppGenerator.prototype.h5bp = function h5bp() {
 };
 
 AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
-  if (this.compassBootstrap) {
-    this.copy('main.scss', 'app/styles/main.scss');
-  } else {
-    this.copy('main.css', 'app/styles/main.css');
-  }
+  var css = 'main.' + (this.includeCompass ? 's' : '') + 'css';
+  this.copy(css, 'app/styles/' + css);
 };
 
 AppGenerator.prototype.writeIndex = function writeIndex() {
@@ -126,23 +130,32 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
     });
   }
 
-  if (this.compassBootstrap) {
-    // wire Twitter Bootstrap plugins
+  // wire Twitter Bootstrap plugins
+  if (this.includeBootstrap) {
+    var bs = 'bower_components/bootstrap' + (this.includeCompass ? '-sass/vendor/assets/javascripts/bootstrap/' : '/js/');
     this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-      'bower_components/sass-bootstrap/js/affix.js',
-      'bower_components/sass-bootstrap/js/alert.js',
-      'bower_components/sass-bootstrap/js/dropdown.js',
-      'bower_components/sass-bootstrap/js/tooltip.js',
-      'bower_components/sass-bootstrap/js/modal.js',
-      'bower_components/sass-bootstrap/js/transition.js',
-      'bower_components/sass-bootstrap/js/button.js',
-      'bower_components/sass-bootstrap/js/popover.js',
-      'bower_components/sass-bootstrap/js/carousel.js',
-      'bower_components/sass-bootstrap/js/scrollspy.js',
-      'bower_components/sass-bootstrap/js/collapse.js',
-      'bower_components/sass-bootstrap/js/tab.js'
+      bs + 'affix.js',
+      bs + 'alert.js',
+      bs + 'dropdown.js',
+      bs + 'tooltip.js',
+      bs + 'modal.js',
+      bs + 'transition.js',
+      bs + 'button.js',
+      bs + 'popover.js',
+      bs + 'carousel.js',
+      bs + 'scrollspy.js',
+      bs + 'collapse.js',
+      bs + 'tab.js'
     ]);
   }
+
+  this.indexFile = this.appendFiles({
+    html: this.indexFile,
+    fileType: 'js',
+    optimizedPath: 'scripts/main.js',
+    sourceFileList: ['scripts/main.js'],
+    searchPath: '{app,.tmp}'
+  });
 };
 
 // TODO(mklabs): to be put in a subgenerator like rjs:app
@@ -170,6 +183,24 @@ AppGenerator.prototype.app = function app() {
   this.write('app/index.html', this.indexFile);
 
   if (this.coffee) {
-    this.write('app/scripts/hello.coffee', this.mainCoffeeFile);
+    this.write(
+      'app/scripts/main.coffee',
+      'console.log "\'Allo from CoffeeScript!"'
+    );
   }
+  else {
+    this.write('app/scripts/main.js', 'console.log(\'\\\'Allo \\\'Allo!\');');
+  }
+};
+
+AppGenerator.prototype.install = function () {
+  if (this.options['skip-install']) {
+    return;
+  }
+  var done = this.async();
+  this.installDependencies({
+    skipMessage: this.options['skip-install-message'],
+    skipInstall: this.options['skip-install'],
+    callback: done
+  });
 };

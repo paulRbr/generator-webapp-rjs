@@ -1,4 +1,4 @@
-# Web app generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-webapp.png?branch=master)](http://travis-ci.org/yeoman/generator-webapp)
+# Web app generator [![Build Status](https://secure.travis-ci.org/popox/generator-webapp-rjs.png?branch=master)](http://travis-ci.org/popox/generator-webapp-rjs)
 
 Yeoman generator that scaffolds out a front-end web app.
 
@@ -13,15 +13,37 @@ Yeoman generator that scaffolds out a front-end web app.
 * Awesome Image Optimization (via OptiPNG, pngquant, jpegtran and gifsicle)
 * Mocha Unit Testing with PhantomJS
 * Optional - Twitter Bootstrap for SASS
-* Optional - Leaner Modernizr builds (new)
+* Optional - Leaner Modernizr builds *(new)*
 
-For more information on what `generator-webapp-rjs` can do for you, take a look at the [Grunt tasks](https://github.com/popox/generator-webapp-rjs/blob/master/app/templates/_package.json) used in our `package.json`.
+For more information on what `generator-webapp` can do for you, take a look at the [Grunt tasks](https://github.com/yeoman/generator-webapp/blob/master/app/templates/_package.json) used in our `package.json`.
+
 
 ## Getting Started
 
-- Install: `npm install -g generator-webapp-rjs`
-- Run: `yo webapp-rjs`
-- Run `grunt` for building and `grunt serve` for preview
+- Install: `npm install -g generator-webapp`
+- Run: `yo webapp`
+- Run `grunt` for building and `grunt serve` for preview [*](#serve-note)
+
+
+#### Third-Party Dependencies
+
+*(HTML/CSS/JS/Images/etc)*
+
+Third-party dependencies are managed with [bower-install](https://github.com/stephenplusplus/grunt-bower-install). Add new dependencies using **Bower** and then run the **Grunt** task to load them:
+
+```bash
+  bower install --save jquery
+  grunt bower-install
+```
+
+This works if the package author has followed the [Bower spec](https://github.com/bower/bower.json-spec). If the files are not automatically added to your index.html, check with the package's repo for support and/or file an issue with them to have it updated.
+
+To manually add dependencies, `bower install depName --save` to get the files, then add a `script` or `style` tag to your `index.html` or an other appropriate place.
+
+
+#### Grunt Serve Note
+
+Note: `grunt server` was previously used for previewing in earlier versions of the project and is being deprecated in favor of `grunt serve`.
 
 
 ## Options
@@ -37,6 +59,7 @@ For more information on what `generator-webapp-rjs` can do for you, take a look 
 * `--coffee`
 
   Add support for [CoffeeScript](http://coffeescript.org/).
+
 
 ## Contribute
 
