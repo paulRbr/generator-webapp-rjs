@@ -20,8 +20,8 @@ For more information on what `generator-webapp` can do for you, take a look at t
 
 ## Getting Started
 
-- Install: `npm install -g generator-webapp`
-- Run: `yo webapp`
+- Install: `npm install -g generator-webapp-rjs`
+- Run: `yo webapp-rjs`
 - Run `grunt` for building and `grunt serve` for preview [*](#serve-note)
 
 

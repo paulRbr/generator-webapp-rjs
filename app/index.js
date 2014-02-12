@@ -119,51 +119,30 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
 
   this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
   this.indexFile = this.engine(this.indexFile, this);
+};
 
-  if (this.coffee) {
-    this.indexFile = this.appendFiles({
-      html: this.indexFile,
-      fileType: 'js',
-      optimizedPath: 'scripts/coffee.js',
-      sourceFileList: ['scripts/hello.js'],
-      searchPath: '.tmp'
-    });
-  }
-
-  // wire Twitter Bootstrap plugins
-  if (this.includeBootstrap) {
-    var bs = 'bower_components/bootstrap' + (this.includeCompass ? '-sass/vendor/assets/javascripts/bootstrap/' : '/js/');
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-      bs + 'affix.js',
-      bs + 'alert.js',
-      bs + 'dropdown.js',
-      bs + 'tooltip.js',
-      bs + 'modal.js',
-      bs + 'transition.js',
-      bs + 'button.js',
-      bs + 'popover.js',
-      bs + 'carousel.js',
-      bs + 'scrollspy.js',
-      bs + 'collapse.js',
-      bs + 'tab.js'
-    ]);
-  }
+AppGenerator.prototype.requirejs = function requirejs() {
 
   this.indexFile = this.appendFiles({
     html: this.indexFile,
     fileType: 'js',
     optimizedPath: 'scripts/main.js',
-    sourceFileList: ['scripts/main.js'],
+    sourceFileList: ['bower_components/requirejs/require.js'],
+    attrs: {
+      'data-main': 'scripts/main'
+    },
     searchPath: '{app,.tmp}'
   });
-};
 
-// TODO(mklabs): to be put in a subgenerator like rjs:app
-AppGenerator.prototype.requirejs = function requirejs() {
+  // wire Twitter Bootstrap plugins
+  if (this.includeBootstrap) {
+    var data = {
+      includeBootstrap: this.includeBootstrap,
+      bs : '../bower_components/bootstrap' + (this.includeCompass ? '-sass/vendor/assets/javascripts/bootstrap/' : '/js/')
+    }
+  }
 
-  this.indexFile = this.appendScripts(this.indexFile, 'scripts/main.js', ['bower_components/requirejs/require.js'], {
-    'data-main': 'scripts/main'
-  });
+  this.template('require_main.js', 'app/scripts/main.js', data);
 
   // add a basic amd module
   if (this.coffee) {
@@ -171,8 +150,6 @@ AppGenerator.prototype.requirejs = function requirejs() {
   } else {
     this.copy('app.js', 'app/scripts/app.js');
   }
-
-  this.template('require_main.js', 'app/scripts/main.js');
 };
 
 AppGenerator.prototype.app = function app() {
@@ -181,16 +158,6 @@ AppGenerator.prototype.app = function app() {
   this.mkdir('app/styles');
   this.mkdir('app/images');
   this.write('app/index.html', this.indexFile);
-
-  if (this.coffee) {
-    this.write(
-      'app/scripts/main.coffee',
-      'console.log "\'Allo from CoffeeScript!"'
-    );
-  }
-  else {
-    this.write('app/scripts/main.js', 'console.log(\'\\\'Allo \\\'Allo!\');');
-  }
 };
 
 AppGenerator.prototype.install = function () {
