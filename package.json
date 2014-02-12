@@ -1,6 +1,6 @@
 {
   "name": "generator-webapp-rjs",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "description": "Scaffold out a front-end web app",
   "license": "BSD",
   "repository": "popox/generator-webapp",
